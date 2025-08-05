@@ -41,7 +41,7 @@ export function NoteEditor({ note, onBackClick }: NoteEditorProps) {
   const handleTranscript = (text: string) => {
     if (editorRef.current) {
       const currentContent = editorRef.current.getHTML();
-      const newContent = currentContent + (currentContent ? " " : "") + text;
+      const newContent = currentContent + (currentContent ? ' ' : '') + text;
       handleContentChange(newContent);
     }
   };

@@ -30,7 +30,10 @@ interface ImageTransformations {
 }
 
 // Helper function to transform image using Canvas API
-const transformImage = async (file: File, transformations: ImageTransformations): Promise<File> => {
+const transformImage = async (
+  file: File,
+  transformations: ImageTransformations
+): Promise<File> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const canvas = document.createElement('canvas');
@@ -48,13 +51,13 @@ const transformImage = async (file: File, transformations: ImageTransformations)
 
       // Apply transformations
       ctx.save();
-      
+
       // Move to center for rotation
       ctx.translate(canvas.width / 2, canvas.height / 2);
-      
+
       // Apply rotation
       ctx.rotate((transformations.rotate * Math.PI) / 180);
-      
+
       // Apply filters
       ctx.filter = `
         brightness(${transformations.brightness})
@@ -62,10 +65,10 @@ const transformImage = async (file: File, transformations: ImageTransformations)
         saturate(${transformations.saturation})
         blur(${transformations.blur}px)
       `;
-      
+
       // Draw image (centered due to translation)
       ctx.drawImage(img, -img.width / 2, -img.height / 2);
-      
+
       ctx.restore();
 
       // Convert canvas to blob with quality setting
@@ -75,7 +78,7 @@ const transformImage = async (file: File, transformations: ImageTransformations)
             // Create new file with transformed image
             const transformedFile = new File([blob], file.name, {
               type: file.type,
-              lastModified: Date.now(),
+              lastModified: Date.now()
             });
             resolve(transformedFile);
           } else {
@@ -110,14 +113,14 @@ export function InsertButtons({ editor }: InsertButtonsProps) {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
   const handleImageUpload = async (
-    file: File, 
-    size: string, 
+    file: File,
+    size: string,
     transformations: ImageTransformations
   ) => {
     try {
       // Transform the image before uploading
       const transformedFile = await transformImage(file, transformations);
-      
+
       // Create FormData to send the transformed file
       const formData = new FormData();
       formData.append('file', transformedFile);
@@ -134,7 +137,7 @@ export function InsertButtons({ editor }: InsertButtonsProps) {
 
       const data = await response.json();
       const imageUrl = data.data.variants[0];
-      
+
       // Apply the selected size
       const sizeMap: { [key: string]: string } = {
         small: '25%',
@@ -142,19 +145,21 @@ export function InsertButtons({ editor }: InsertButtonsProps) {
         large: '75%',
         original: '100%'
       };
-      
+
       // Insert the image into the editor
       editor
         .chain()
         .focus()
-        .setImage({ 
+        .setImage({
           src: imageUrl,
-          alt: file.name,
+          alt: file.name
         })
         .run();
 
       // Apply size styling after insertion
-      const imageElement = editor.view.dom.querySelector(`img[src="${imageUrl}"]`) as HTMLImageElement;
+      const imageElement = editor.view.dom.querySelector(
+        `img[src="${imageUrl}"]`
+      ) as HTMLImageElement;
       if (imageElement) {
         imageElement.style.width = sizeMap[size];
         imageElement.style.height = 'auto';
@@ -401,7 +406,7 @@ export function InsertButtons({ editor }: InsertButtonsProps) {
           </button>
         </div>
       </AiDialog>
-      
+
       <ImageUploadDialog
         isOpen={isImageDialogOpen}
         onClose={() => setIsImageDialogOpen(false)}

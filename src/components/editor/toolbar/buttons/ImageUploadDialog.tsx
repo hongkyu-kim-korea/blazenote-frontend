@@ -4,7 +4,11 @@ import { X, RotateCw } from 'lucide-react';
 interface ImageUploadDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onImageUpload: (file: File, size: string, transformations: ImageTransformations) => void;
+  onImageUpload: (
+    file: File,
+    size: string,
+    transformations: ImageTransformations
+  ) => void;
 }
 
 interface ImageTransformations {
@@ -20,7 +24,7 @@ const IMAGE_SIZES = [
   { label: 'Small', value: 'small', width: '25%' },
   { label: 'Medium', value: 'medium', width: '50%' },
   { label: 'Large', value: 'large', width: '75%' },
-  { label: 'Original', value: 'original', width: '100%' },
+  { label: 'Original', value: 'original', width: '100%' }
 ];
 
 const DEFAULT_TRANSFORMATIONS: ImageTransformations = {
@@ -29,13 +33,19 @@ const DEFAULT_TRANSFORMATIONS: ImageTransformations = {
   saturation: 1,
   blur: 0,
   rotate: 0,
-  quality: 85,
+  quality: 85
 };
 
-export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploadDialogProps) {
+export function ImageUploadDialog({
+  isOpen,
+  onClose,
+  onImageUpload
+}: ImageUploadDialogProps) {
   const [selectedSize, setSelectedSize] = useState('medium');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [transformations, setTransformations] = useState<ImageTransformations>(DEFAULT_TRANSFORMATIONS);
+  const [transformations, setTransformations] = useState<ImageTransformations>(
+    DEFAULT_TRANSFORMATIONS
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
@@ -64,8 +74,11 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
     }
   };
 
-  const handleTransformationChange = (key: keyof ImageTransformations, value: number) => {
-    setTransformations(prev => ({
+  const handleTransformationChange = (
+    key: keyof ImageTransformations,
+    value: number
+  ) => {
+    setTransformations((prev) => ({
       ...prev,
       [key]: value
     }));
@@ -90,7 +103,9 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
         max={max}
         step={step}
         value={transformations[key]}
-        onChange={(e) => handleTransformationChange(key, parseFloat(e.target.value))}
+        onChange={(e) =>
+          handleTransformationChange(key, parseFloat(e.target.value))
+        }
         className="w-full"
       />
     </div>
@@ -101,7 +116,10 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Insert Image</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -119,9 +137,9 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
             {previewUrl && (
               <div className="mt-4">
                 <p className="text-sm font-medium mb-2">Preview:</p>
-                <img 
-                  src={previewUrl} 
-                  alt="Preview" 
+                <img
+                  src={previewUrl}
+                  alt="Preview"
                   className="max-h-48 object-contain border rounded"
                   style={{
                     filter: `
@@ -130,7 +148,7 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
                       saturate(${transformations.saturation})
                       blur(${transformations.blur}px)
                     `,
-                    transform: `rotate(${transformations.rotate}deg)`,
+                    transform: `rotate(${transformations.rotate}deg)`
                   }}
                 />
               </div>
@@ -192,4 +210,4 @@ export function ImageUploadDialog({ isOpen, onClose, onImageUpload }: ImageUploa
       </div>
     </div>
   );
-} 
+}
